@@ -2297,3 +2297,4 @@ mod dom_rect_structured_clone;
 mod domrect_receiver_consolidation;
 mod window_restricted_accessors;
 mod window_scheduling_receivers;
+mod window_sync_method_receivers;
