@@ -2274,6 +2274,7 @@ mod webidl_fetch;
 mod webidl_receivers;
 mod webidl_trusted_types;
 mod websocket;
+mod window_event_receivers;
 mod window_execution_context;
 mod window_getter_consolidation;
 mod worklet_interfaces;
