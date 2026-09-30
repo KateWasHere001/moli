@@ -13,6 +13,7 @@ enum RealmDependentFinalizer {
     NodeMixinUnscopables,
     CryptoSecureContextSurface,
     BaseAudioContextSecureContextSurface,
+    NavigatorSecureContextSurface,
     XmlHttpRequestEventTargetState,
     NotificationPermission,
     PointerEventSecureContextSurface,
@@ -41,6 +42,10 @@ const REALM_DEPENDENT_FINALIZER_ALLOWLIST: &[(&str, RealmDependentFinalizer)] = 
     (
         "BaseAudioContext",
         RealmDependentFinalizer::BaseAudioContextSecureContextSurface,
+    ),
+    (
+        "Navigator",
+        RealmDependentFinalizer::NavigatorSecureContextSurface,
     ),
     (
         "Crypto",
@@ -92,6 +97,11 @@ pub(super) fn finalize_materialized_interface<'s>(
         }
         RealmDependentFinalizer::BaseAudioContextSecureContextSurface => {
             finalize_base_audio_context_realm_bindings(scope, prototype)
+        }
+        RealmDependentFinalizer::NavigatorSecureContextSurface => {
+            crate::context_bootstrap::navigator_runtime::finalize_navigator_realm_bindings(
+                scope, prototype,
+            )
         }
         RealmDependentFinalizer::CryptoSecureContextSurface => {
             finalize_crypto_realm_bindings(scope, prototype)
@@ -147,6 +157,7 @@ mod tests {
                 "DocumentType",
                 "CharacterData",
                 "BaseAudioContext",
+                "Navigator",
                 "Crypto",
                 "XMLHttpRequestEventTarget",
                 "Notification",
