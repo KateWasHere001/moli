@@ -350,6 +350,7 @@ interfaces! {
     PerformanceMeasure: PerformanceEntry;
     PerformanceNavigation;
     PerformanceNavigationTiming: PerformanceResourceTiming;
+    ReportBody;
     PerformanceObserver;
     PerformanceObserverEntryList;
     PerformanceResourceTiming: PerformanceEntry;
