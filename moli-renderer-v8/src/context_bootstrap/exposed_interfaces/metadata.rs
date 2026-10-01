@@ -25,6 +25,9 @@ pub(in crate::context_bootstrap) const WORKER_SHARED_INTERFACE_NAMES: &[&str] = 
     "DOMPoint",
     "DOMMatrixReadOnly",
     "DOMMatrix",
+    "MediaSourceHandle",
+    "SourceBuffer",
+    "SourceBufferList",
     "EventTarget",
     "Event",
     "CustomEvent",
@@ -135,6 +138,8 @@ const WINDOW_DEDICATED_AND_SHARED_WORKER_INTERFACE_NAMES: &[&str] = &[
     "XMLHttpRequest",
 ];
 const DEDICATED_AND_SHARED_WORKER_INTERFACE_NAMES: &[&str] = &["FileReaderSync"];
+const WINDOW_AND_DEDICATED_WORKER_INTERFACE_NAMES: &[&str] =
+    &["MediaSourceHandle", "SourceBuffer", "SourceBufferList"];
 
 pub(in crate::context_bootstrap) const INDEXED_DB_INTERFACE_NAMES: &[&str] = &[
     "DOMStringList",
@@ -412,6 +417,9 @@ fn exposure_for_name(name: &str) -> ExposureSet {
         "EncodedVideoChunk" => ExposureSet::WINDOW_AND_DEDICATED_WORKER,
         _ if WINDOW_DEDICATED_AND_SHARED_WORKER_INTERFACE_NAMES.contains(&name) => {
             ExposureSet::WINDOW_DEDICATED_AND_SHARED_WORKER
+        }
+        _ if WINDOW_AND_DEDICATED_WORKER_INTERFACE_NAMES.contains(&name) => {
+            ExposureSet::WINDOW_AND_DEDICATED_WORKER
         }
         _ if DEDICATED_AND_SHARED_WORKER_INTERFACE_NAMES.contains(&name) => {
             ExposureSet::DEDICATED_AND_SHARED_WORKER
