@@ -2321,6 +2321,7 @@ mod string_timers;
 mod svg_animation_interfaces;
 mod svg_filter_interfaces;
 mod svg_geometry_methods;
+mod svg_geometry_receivers;
 mod svg_number_validation;
 mod svg_root_factory_receivers;
 mod svg_switch_mpath_interfaces;
