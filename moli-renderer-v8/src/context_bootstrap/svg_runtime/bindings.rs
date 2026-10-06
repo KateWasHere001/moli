@@ -2125,6 +2125,13 @@ macro_rules! define_svg_uri_reference_accessors {
 }
 
 define_svg_uri_reference_accessors!(SvgAUriReferenceAccessorsDeclaration, SVGAElement);
+
+#[derive(WebApiFunctionTemplate)]
+#[webapi(interface = web_api_interfaces::SVGAElement, enumerable, receiver)]
+struct SvgAElementTargetAccessorsDeclaration {
+    #[webapi(accessor_property = "target", getter = svg_a_target_getter)]
+    target: (),
+}
 define_svg_uri_reference_accessors!(SvgImageUriReferenceAccessorsDeclaration, SVGImageElement);
 define_svg_uri_reference_accessors!(SvgUseUriReferenceAccessorsDeclaration, SVGUseElement);
 define_svg_uri_reference_accessors!(
@@ -2703,6 +2710,7 @@ pub(super) fn install_svg_element_accessor_bindings<'s>(
         }
         "SVGAElement" => {
             SvgAUriReferenceAccessorsDeclaration::initialize_prototype_template(scope, prototype);
+            SvgAElementTargetAccessorsDeclaration::initialize_prototype_template(scope, prototype);
         }
         "SVGScriptElement" => {
             SvgScriptUriReferenceAccessorsDeclaration::initialize_prototype_template(
