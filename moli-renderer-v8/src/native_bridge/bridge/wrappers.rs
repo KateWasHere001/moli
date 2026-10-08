@@ -68,9 +68,14 @@ impl NativeDomBridge {
         let current = scope.get_current_context();
         let foreign_host =
             crate::util::context_host_ptr_from_context_slot(current) != Some(host_ptr);
+        let producer = if handle.node_handle().is_some() {
+            self.identity.node_owner_context(scope, host_ptr)
+        } else {
+            unsafe { &*host_ptr }.page_default_context(scope)
+        };
         if identity == BridgeWrapperIdentity::Canonical
             && foreign_host
-            && let Some(producer) = unsafe { &*host_ptr }.page_default_context(scope)
+            && let Some(producer) = producer
             && super::super::identity::contexts_share_wrapper_world(current, producer)
         {
             // One-field wrappers resolve their native host from the creation
@@ -78,8 +83,10 @@ impl NativeDomBridge {
             let scope = &mut v8::ContextScope::new(scope, producer);
             return self.materialize_bridge_wrapper(scope, host_ptr, handle, identity);
         }
-        let native_owner = if identity == BridgeWrapperIdentity::NewObject && foreign_host {
-            let producer = unsafe { &*host_ptr }.page_default_context(scope)?;
+        let native_owner = if foreign_host
+            && (identity == BridgeWrapperIdentity::NewObject || handle.node_handle().is_some())
+        {
+            let producer = producer?;
             let scope = &mut v8::ContextScope::new(scope, producer);
             Some(v8::Global::new(scope, v8::Object::new(scope)))
         } else {
@@ -94,9 +101,14 @@ impl NativeDomBridge {
             return Some(wrapper);
         }
 
-        let wrapper = self
-            .bindings
-            .instantiate_wrapper(scope, host_ptr, handle, reflector_id);
+        let wrapper =
+            self.bindings
+                .instantiate_wrapper(scope, host_ptr, handle.clone(), reflector_id);
+        if let Some(node) = handle.node_handle() {
+            self.identity
+                .node_ownership(scope, host_ptr, node)
+                .bind(scope, wrapper);
+        }
         if let Some(owner) = native_owner {
             let owner = v8::Local::new(scope, owner);
             crate::util::set_private_value(
