@@ -2282,6 +2282,7 @@ mod location_put_forwards;
 mod media_device_interfaces;
 mod media_metadata;
 mod media_owner_playback_interfaces;
+mod media_recorder;
 mod media_recorder_shell;
 mod media_streams;
 mod midi_owner_interfaces;
